@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+<!--  -->
+{%block title%}REGISTER{%endblock title%} \
+<!--  -->
+{%block body%}
+<form action="{% url 'register' %}" id="registration-form" name="registrationForm" method="post" autocomplete="off">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Personal Information</legend>
+        <label for="tid">Teacher id</label>
+        <input type="text" id="tid" name="tid" placeholder="Enter Tid" required>
+
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="Enter Email-id" required>
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter 10 digit phone number (Optional)">
+
+        <label for="password">Set Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="branch">Select Branch</label>
+        <select id="branch" name="branch" required>
+        <option disabled selected value>Choose a Branch</option>
+        {% for dept in departments %}
+        <option value="{{dept.d_id}}" >{{dept.d_name}}</option>
+        {% endfor %}
+    </select>
+    </fieldset>
+    <button class="register-btn" type="submit">SUBMIT</button>
+</form>{%endblock body%}

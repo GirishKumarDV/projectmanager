@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+<!--  -->
+{% block title %}PROJECTS{% endblock title %}
+<!--  -->
+{% block body %}
+<!--  -->
+{% if messages %}
+<!--  -->
+{% for message in messages %}
+<h3 class="alert-message">{{ message }}</h3>
+{% endfor %}
+<!--  -->
+{% endif %}
+<!--  -->
+<div class="logout-btn-div">
+    <a href="{% url 'profileTeacher' teacher_id %}">Profile</a>
+    <a href="{% url 'assigned' teacher_id %}">Assigned</a>
+    <a href="{% url 'submissions' teacher_id %}">Submissions</a>
+    <a href="{% url 'login' %}">Logout</a>
+</div>
+<br>
+<br><br>
+<br><br>
+<fieldset class="projects-fieldset">
+    <legend>Assigned Projects</legend>
+    <table class="project-table">
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Description</th>
+                <th>Class</th>
+                <th>Subject</th>
+                <th>Deadline</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if assigned_projects is not None %}
+            <!--  -->
+            {% for project in assigned_projects %}
+            <tr>
+                <form action="">
+                    <td>
+                        <h4>{{project.activity_name}}</h4>
+                    </td>
+                    <td>
+                        <textarea name="activity_description" class="description" id="description-textbox-assigned" cols="30" rows="3" readonly>{{project.activity_description}}</textarea>
+                    </td>
+                    <td>
+                        <h4>{{project.for_semsec}}</h4>
+                    </td>
+                    <td>
+                        <h4>{{project.for_subject.subj_name}}</h4>
+                    </td>
+                    <td>
+                        <h4>{{project.deadline}}</h4>
+                    </td>
+                    <td class="project-options-td">
+                        <a href="{% url 'updateProject' teacher_id project.id %}" class="project-options-links-update">UPDATE</a>
+                    </td>
+                    <td class="project-options-td">
+                        <a href="{% url 'deleteProject' teacher_id project.id %}" class="project-options-links-delete">DELETE</a>
+                    </td>
+                </form>
+            </tr>
+            {% endfor %}
+            <!--  -->
+            {% endif %}
+        </tbody>
+    </table>
+</fieldset>
+{% endblock body %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block title %}PROFILE{% endblock title %}
+<!--  -->
+{% block body %}
+<!--  -->
+{% if messages %}
+<!--  -->
+{% for message in messages %}
+<h3 class="alert-message">{{ message }}</h3>
+{% endfor %}
+<!--  -->
+{% endif %}
+<br>
+<div class="logout-btn-div">
+    <a href="{% url 'profileStudent' usn %}">Profile</a>
+    <a href="{% url 'submitted' usn %}">Submitted</a>
+    <a href="">Graded</a>
+    <a href="{% url 'login' %}">Logout</a>
+</div>
+<br><br><br><br><br>
+<fieldset class="projects-fieldset">
+    <legend>Submitted Projects</legend>
+    <table>
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Description</th>
+                <th>Faculty</th>
+                <th>Deadline</th>
+                <th>Project Title</th>
+                <th>Github Repo / Drive Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in submitted_projects %}
+            <tr>
+                <td>{{project.for_project_id.activity_name}}</td>
+                <td>
+                    <textarea name="activity_description" class="description" id="description-textbox-assigned" cols="30" rows="3" readonly>{{project.for_project_id.activity_description}}</textarea>
+                </td>
+                <td>{{project.for_project_id.assigned_by.name}}</td>
+                <td>{{project.for_project_id.deadline}}</td>
+                <td>{{project.project_title}}</td>
+                <td>
+                    <a href="{{project.source_url}}" target="_blank">{{project.for_project_id.activity_name}} Submission</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</fieldset>
+{% endblock body %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+<!--  -->
+{% block title %}PROFILE{% endblock title %}
+<!--  -->
+{% block body %}
+<!--  -->
+{% if messages %}
+<!--  -->
+{% for message in messages %}
+<h3 class="alert-message">{{ message }}</h3>
+{% endfor %}
+<!--  -->
+{% endif %}
+<br>
+<!--  -->
+<div class="logout-btn-div">
+    <a href="{% url 'profileTeacher' teacher.tid %}">Profile</a>
+    <a href="{% url 'assigned' teacher.tid %}">Assigned</a>
+    <a href="{% url 'submissions' teacher.tid %}">Submissions</a>
+    <a href="{% url 'login' %}">Logout</a>
+</div>
+<div class="dashboard">
+    <div class="field-labels">
+        <h3 class="field-labels-item">Teacher ID</h3>
+        <h3 class="field-labels-item">Name</h3>
+        <h3 class="field-labels-item">E-Mail</h3>
+        <h3 class="field-labels-item">Phone</h3>
+        <h3 class="field-labels-item">Branch</h3>
+    </div>
+    <div class="field-values">
+        <h3 class="field-values-item">{{teacher.tid}}</h3>
+        <h3 class="field-values-item">{{teacher.name}}</h3>
+        <h3 class="field-values-item">{{teacher.email}}</h3>
+        {% if phone %}
+        <h3 class="field-values-item">{{teacher.phone}}</h3>
+        {% else %}
+        <h3 class="field-values-item">-</h3>
+        {% endif %}
+        <h3 class="field-values-item">{{teacher.branch.d_name}}</h3>
+        <h3 class="field-values-item"></h3>
+    </div>
+</div>
+<br>
+<hr>
+<fieldset class="projects-fieldset">
+    <legend>Create Assignment</legend>
+    <table>
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Description</th>
+                <th>Subject</th>
+                <th>Deadline</th>
+                <th>Class</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <form action="{% url 'addProject' teacher.tid %}" method="get">
+                    <td><input type="text" name="activity_name" placeholder="Activity Name Eg: Activity 1" required></td>
+                    <td>
+                        <textarea name="activity_description" class="description" id="description-textbox-profile" cols="30" rows="3" placeholder="Add assignment Description(if any)..."></textarea>
+                    </td>
+                    <td>
+                        <select id="subject" name="for_subject" required>
+                    <option disabled selected value>Select Subject</option>
+                    {% for subject in subjects %}
+                    <option class="subject-option-field" value="{{subject.subj_code}}">{{subject.subj_name}}</option>
+                    {% endfor %}
+                </select>
+                    </td>
+                    <td><input type="datetime-local" name="deadline" required></td>
+                    <td><select name="assign_to" id="assign_to" class="assign-to" required>
+                        <option disabled selected value>Select Class</option>
+                        {% for class in for_class %}
+                        <option value="{{class.semsec}}">{{class.semsec}}</option>
+                        {% endfor %}
+                    </select></td>
+                    <td><button class="create-btn" type="submit">Create Activity</button></td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+{% endblock body %}

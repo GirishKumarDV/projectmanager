@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+<!--  -->
+{% block title %}PROFILE{% endblock title %}
+<!--  -->
+{% block body %}
+<!--  -->
+{% if messages %}
+<!--  -->
+{% for message in messages %}
+<h3 class="alert-message">{{ message }}</h3>
+{% endfor %}
+<!--  -->
+{% endif %}
+<br>
+<!--  -->
+<div class="logout-btn-div">
+    <a href="{% url 'profileStudent' student.usn %}">Profile</a>
+    <a href="{% url 'submitted' student.usn %}">Submitted</a>
+    <a href="./graded.html/">Graded</a>
+    <a href="{% url 'login' %}">Logout</a>
+</div>
+<div class="dashboard">
+    <div class="field-labels">
+        <h3 class="field-labels-item">USN</h3>
+        <h3 class="field-labels-item">Name</h3>
+        <h3 class="field-labels-item">E-Mail</h3>
+        <h3 class="field-labels-item">Phone</h3>
+        <h3 class="field-labels-item">Branch</h3>
+        <h3 class="field-labels-item">Class</h3>
+    </div>
+    <div class="field-values">
+        <h3 class="field-values-item">{{student.usn}}</h3>
+        <h3 class="field-values-item">{{student.name}}</h3>
+        <h3 class="field-values-item">{{student.email}}</h3>
+        {% if student.phone %}
+        <h3 class="field-values-item">{{student.phone}}</h3>
+        {% else %}
+        <h3 class="field-values-item">-</h3>
+        {% endif %}
+        <h3 class="field-values-item">{{student.branch.d_name}}</h3>
+        <h3 class="field-values-item">{{student.semsec}}</h3>
+    </div>
+</div>
+<br>
+<hr>
+<fieldset class="projects-fieldset">
+    <legend>Projects</legend>
+    <table>
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Description</th>
+                <th>Faculty</th>
+                <th>Deadline</th>
+                <th>Project Title</th>
+                <th>Github Repo / Drive Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if projects is not None %}
+            <!--  -->
+            {% for project in projects %}
+            <!--  -->
+            <tr>
+                <form action="{% url 'handInProject' student.usn project.id %}" id="project-form" name="projectForm" method="get">
+                    {% csrf_token %}
+                    <td>{{project.activity_name}}</td>
+                    <td>
+                        <textarea name="activity_description" class="description" id="description-textbox-assigned" cols="30" rows="3" readonly>{{project.activity_description}}</textarea>
+                    </td>
+                    <td>{{project.assigned_by.name}}</td>
+                    <td>{{project.deadline}}</td>
+                    <td><input id="project-title" name="project_title" placeholder="Enter your Project Title" type="text" required></td>
+                    <td>URL&ensp;<input type="url" name="project_url" placeholder="Link to Drive/Source Code" required></td>
+                    <td><button class="turn-in-btn" type="submit">HAND IN</button></td>
+                </form>
+            </tr>
+            <!--  -->
+            {% endfor %}
+            <!--  -->
+            {% endif %}
+        </tbody>
+    </table>
+</fieldset>
+<!--  -->
+{% endblock body %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% block title %}PROFILE{% endblock title %}
+<!--  -->
+{% block body %}
+<!--  -->
+{% if messages %}
+<!--  -->
+{% for message in messages %}
+<h3 class="alert-message">{{ message }}</h3>
+{% endfor %}
+<!--  -->
+{% endif %}
+<br>
+<!--  -->
+<div class="logout-btn-div">
+    <a href="{% url 'profileTeacher' teacher_id %}">Profile</a>
+    <a href="{% url 'assigned' teacher_id %}">Assigned</a>
+    <a href="{% url 'submissions' teacher_id %}">Submissions</a>
+    <a href="{% url 'login' %}">Logout</a>
+</div>
+<fieldset>
+    <legend>Update <u class="updateProject">{{update_project.activity_name}}</u> for class <u class="updateProject">{{update_project.for_semsec}}</u></legend>
+    <p>Fields Marked <span class="red-astriks">*</span> cannot be updated. Go back to previous page and DELETE assignment if necessary.</p>
+    <form action="{% url 'updateProject' teacher_id update_project.id %}" method="post">
+        {% csrf_token %}
+        <div class="update-form">
+
+            <label for="activity_name">Activity Name <span class="red-astriks">*</span></label>
+            <input class="update-field" type="text" id="activity_name" value="{{update_project.activity_name}}" readonly>
+
+            <label for="description-textbox">Activity Description</label>
+            <textarea class="update-field-editable" name="activity_description" id="description-textbox" cols="30" rows="7">{{update_project.activity_description}}</textarea>
+
+            <label for="class">Class <span class="red-astriks">*</span></label>
+            <input class="update-field" type="text" id="class" value="{{update_project.for_semsec}}" readonly>
+
+            <label for="for_subject">Subject <span class="red-astriks">*</span></label>
+            <input class="update-field" type="text" id="for_subject" value="{{update_project.for_subject.subj_name}} ({{update_project.for_subject}})" readonly>
+
+            <label for="deadline">Deadline - <u class="updateProject">{{update_project.deadline}}</u></label>
+            <input class="update-field-editable" type="datetime-local" name="deadline" id="deadline" value="{{update_project.deadline}}">
+        </div>
+        <button type="submit">SAVE</button>
+    </form>
+</fieldset>
+{% endblock body %}

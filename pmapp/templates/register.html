@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+<!--  -->
+{%block title%}REGISTER{%endblock title%}
+<!--  -->
+{%block body%}
+<!--  -->
+{% if messages %}
+<!--  -->
+{% for message in messages %}
+<h3 class="alert-message">{{ message }}</h3>
+{% endfor %}
+<!--  -->
+{% endif %}
+<div class="user-type">
+    <h2>Register As</h2>
+    <button value="student" name="student"><a href="{% url 'registerStudent' %}">Student</a></button>
+    <button value="teacher" name="teacher"><a href="{% url 'registerTeacher' %}">Teacher</a></button>
+</div>
+{%endblock body%}

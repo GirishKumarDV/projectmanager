@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+<!--  -->
+{%block title%}LOGIN{%endblock title%}
+<!--  -->
+{% block body %}
+<!--  -->
+{% if messages %}
+<!--  -->
+{% for message in messages %}
+<h3 class="alert-message">{{ message }}</h3>
+{% endfor %}
+<!--  -->
+{% endif %}
+<form action="{% url 'login' %}" id="login-form" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>User Login</legend>
+        <label for="login_id">USN or Teacher ID</label>
+        <input type="text" id="login_id" name="login_id" placeholder="Enter USN eg: 1JS19CS000 or Teacher ID" required>
+        <label for="loginpass">Password</label>
+        <input type="password" id="loginpass" name="loginpass" required>
+        <h4 style="text-align: center;">Login As</h4>
+        <div class="login-btns">
+            <button type="submit" name="student" value="student">Student</button>
+            <button type="submit" name="teacher" value="teacher">Teacher</button>
+        </div>
+    </fieldset>
+</form>
+
+<p class="new-user">New User?&ensp;<a href="{% url 'register' %}">REGISTER HERE</a></p>
+
+{% endblock body %}

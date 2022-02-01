@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+<!--  -->
+{% block title %}GRADED PROJECTS{% endblock title %}
+<!--  -->
+{% block body %}
+<div class="logout-btn-div">
+    <a href="{% url 'login' %}">Logout</a>
+    <a href="{% url 'graded' %}">Graded</a>
+</div>
+<br>
+<br><br>
+<br><br>
+<fieldset class="projects-fieldset">
+    <legend>Graded Projects</legend>
+    <table class="project-table">
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Subject</th>
+                <th>Deadline</th>
+                <th>Project Title</th>
+                <th>Github Repo / Drive Link</th>
+                <th>Grade on 100</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Activity name here</td>
+                <td>Subject Name here</td>
+                <td>Deadline here</td>
+                <td>Project title Here</td>
+                <td class="source-code">URL&ensp;<a href="#">source code here</a></td>
+                <td>Marks here</td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+{% endblock body %}
