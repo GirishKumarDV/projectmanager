@@ -43,8 +43,12 @@ def handInProject(request, usn, pid):
 
 def submitted(request,usn):
     submitted_objs = SubmitProject.objects.filter(submitted_by=usn)
+    submitted_but_not_graded_projects = []
+    for obj in submitted_objs:
+        if obj.grade is None:
+            submitted_but_not_graded_projects.append(obj)
     context = {
-         'submitted_projects':submitted_objs,
+         'submitted_projects':submitted_but_not_graded_projects,
          'usn':usn
         }
     return render(request,'submitted.html',context)
@@ -173,15 +177,21 @@ def submissions(request,tid):
     get_user = get_submitted_students(tid)
     classes_assigned_to =get_user[1]
     submitted_projects = get_user[0]
-    context={
-        'teacher_id':tid,
-        'classes':classes_assigned_to,
-        'submitted_projects':submitted_projects,
-    }
+    non_graded_submissions = []
+    for obj in submitted_projects:
+        if obj.grade is None:
+            non_graded_submissions.append(obj)
+    context = {
+            'teacher_id':tid,
+            'classes':classes_assigned_to,
+            'submitted_projects':non_graded_submissions,
+        }
     if request.method == 'POST':
         grade = request.POST.get('grade')
         sid = request.POST.get('sid')
         SubmitProject.objects.filter(id=sid).update(grade=grade)
+        messages.success(request,"Graded")   
+        return render(request,'submissions.html',context)    
     return render(request,'submissions.html',context)
 
 def graded(request,tid):
