@@ -16,7 +16,7 @@
 <div class="logout-btn-div">
     <a href="{% url 'profileStudent' student.usn %}">Profile</a>
     <a href="{% url 'submitted' student.usn %}">Submitted</a>
-    <a href="./graded.html/">Graded</a>
+    <a href="{% url 'gradedStudent' student.usn %}">Graded</a>
     <a href="{% url 'login' %}">Logout</a>
 </div>
 <div class="dashboard">

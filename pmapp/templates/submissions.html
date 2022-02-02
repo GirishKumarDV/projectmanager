@@ -11,15 +11,63 @@
 {% endif %}
 <br>
 <div class="logout-btn-div">
-    <a href="{% url 'profileTeacher' teacher.tid %}">Profile</a>
-    <a href="{% url 'assigned' teacher.tid %}">Assigned</a>
-    <a href="{% url 'submissions' teacher.tid %}">Submissions</a>
+    <a href="{% url 'profileTeacher' teacher_id %}">Profile</a>
+    <a href="{% url 'assigned' teacher_id %}">Assigned</a>
+    <a href="{% url 'submissions' teacher_id %}">Submissions</a>
+    <a href="{% url 'graded' teacher_id %}">Graded</a>
     <a href="{% url 'login' %}">Logout</a>
 </div>
 <br><br><br><br><br>
 <!--  -->
-{% for %}
-<fieldset class="projects-fieldset">
-    <legend>Submissions</legend>
+<div class="class-links">
+    {% for class in classes %}
+    <a href="#{{class}}"><span>{{class}}</span></a>
+    <!--  -->
+    {% endfor %}
+</div>
+<br><br>
+<!--  -->
+<!--  -->
+{% for class in classes %}
+<!--  -->
+<fieldset id="{{class}}" class="projects-fieldset">
+    <legend>Class {{class}} Submissions</legend>
+    <table>
+        <thead>
+            <tr>
+                <th>Activity Name</th>
+                <th>Project Title</th>
+                <th>Submitted by(Source URL)</th>
+                <th>Deadline</th>
+                <th>Submitted On</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        {% for project in submitted_projects %}
+        <!--  -->
+        {% if project.for_project_id.for_semsec == class %}
+        <tbody>
+            <form action="" method="post">
+                {% csrf_token %}
+                <tr>
+                    <td>{{project.for_project_id.activity_name}}</td>
+                    <td>{{project.project_title}}</td>
+                    <td><a href="{{project.source_url}}" target="_blank">{{project.submitted_by}}-{{project.submitted_by.name}}</a></td>
+                    <td>{{project.for_project_id.deadline}}</td>
+                    <td>{{project.submisstion_date}}</td>
+                    <td><input type="number" name="grade" min="0" max="100"></td>
+                    <input type="number" name="sid" value="{{project.id}}" style="display: none;">
+                    <td><button type="submit">GRADE</button></td>
+                </tr>
+            </form>
+        </tbody>
+        {% endif %}
+        <!--  -->
+        {% endfor %}
+    </table>
 </fieldset>
+<br>
+<!--  -->
+{% endfor %}
+<!--  -->
 {% endblock body %}

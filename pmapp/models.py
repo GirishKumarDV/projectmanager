@@ -96,7 +96,7 @@ class SubmitProject(models.Model):
     source_url = models.URLField(max_length=400,null=True,blank=True)
     grade = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)],null=True,blank=True)
     submitted_by = models.ForeignKey(Student,on_delete=models.CASCADE,null=True,blank=True)
-    submisstion_date = models.DateField(auto_now_add=True,blank=True,null=True)
+    submisstion_date = models.DateTimeField(auto_now_add=True,blank=True,null=True)
     for_project_id = models.ForeignKey(Project,on_delete=models.CASCADE, default=1)
     class Meta:
         db_table = 'SUBMITPROJECT'

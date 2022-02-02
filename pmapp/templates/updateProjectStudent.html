@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block title %}PROFILE{% endblock title %}
+<!--  -->
+{% block body %}
+<!--  -->
+{% if messages %}
+<!--  -->
+{% for message in messages %}
+<h3 class="alert-message">{{ message }}</h3>
+{% endfor %}
+<!--  -->
+{% endif %}
+<br>
+<!--  -->
+<div class="logout-btn-div">
+    <a href="{% url 'profileStudent' usn %}">Profile</a>
+    <a href="{% url 'submitted' usn %}">Submitted</a>
+    <a href="{% url 'graded' usn %}">Graded</a>
+    <a href="{% url 'login' %}">Logout</a>
+</div>
+<fieldset>
+    <legend>Update Submitted Project <u class="updateProject">{{update_project.project_title}}</u></legend>
+    <p>Fields Marked <span class="red-astriks">*</span> cannot be updated. Go back to previous page and DELETE project if necessary.</p>
+    <form action="{% url 'updateProjectStudent' usn update_project.id %}" method="post">
+        {% csrf_token %}
+        <div class="update-form">
+
+            <label for="usn">USN <span class="red-astriks">*</span></label>
+            <input class="update-field" type="text" id="usn" value="{{update_project.submitted_by}}" readonly>
+
+            <label for="activity_name">Activity Name <span class="red-astriks">*</span></label>
+            <input class="update-field" type="text" id="activity_name" value="{{update_project.for_project_id.activity_name}}" readonly>
+
+            <label for="for_subject">Subject <span class="red-astriks">*</span></label>
+            <input class="update-field" type="text" id="for_subject" value="{{update_project.for_project_id.for_subject.subj_name}} ({{update_project.for_project_id.for_subject}})" readonly>
+
+            <label for="description-textbox">Activity Description <span class="red-astriks">*</span></label>
+            <textarea class="update-field" name="activity_description" id="description-textbox" cols="30" rows="7" readonly>{{update_project.for_project_id.activity_description}}</textarea>
+
+            <label for="project_title">Project Title</label>
+            <input class="update-field-editable" type="text" name="project_title" id="project_title" value="{{update_project.project_title}}">
+
+            <label for="url">Source Code / Github repo URL</label>
+            <input class="update-field-editable" type="url" name="source_url" id="url" value="{{update_project.source_url}}">
+
+            <label for="deadline">Deadline <span class="red-astriks">*</span></label>
+            <input class="update-field" type="text" name="deadline" id="deadline" value="{{update_project.for_project_id.deadline}}" readonly>
+        </div>
+        <button type="submit">SAVE CHANGES</button>
+    </form>
+</fieldset>
+{% endblock body %}

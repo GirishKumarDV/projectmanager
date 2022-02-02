@@ -15,6 +15,7 @@
     <a href="{% url 'profileTeacher' teacher_id %}">Profile</a>
     <a href="{% url 'assigned' teacher_id %}">Assigned</a>
     <a href="{% url 'submissions' teacher_id %}">Submissions</a>
+    <a href="{% url 'graded' teacher_id %}">Graded</a>
     <a href="{% url 'login' %}">Logout</a>
 </div>
 <fieldset>
@@ -37,9 +38,9 @@
             <input class="update-field" type="text" id="for_subject" value="{{update_project.for_subject.subj_name}} ({{update_project.for_subject}})" readonly>
 
             <label for="deadline">Deadline - <u class="updateProject">{{update_project.deadline}}</u></label>
-            <input class="update-field-editable" type="datetime-local" name="deadline" id="deadline" value="{{update_project.deadline}}">
+            <input class="update-field-editable" type="datetime-local" name="deadline" id="deadline" value="{{update_project.deadline}}" required>
         </div>
-        <button type="submit">SAVE</button>
+        <button type="submit">SAVE CHANGES</button>
     </form>
 </fieldset>
 {% endblock body %}

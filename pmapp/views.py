@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from multiprocessing import context
 from turtle import update
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -20,6 +21,7 @@ def profileStudent(request, usn):
     # Display only those Projects which have not been submitted by the student
     for submmitted_project in submitted_objs:
         submitted_projects.append(submmitted_project.for_project_id)
+    # The 2 querysets are type caseted to set datatype this gives us the ability to treat the querysets as sets and perform set functions(union,intersection,minus..) on them, here we use minus(-) function
     display_projects = set(project_objs)-set(submitted_projects)
     context = {
         'student': student_obj,
@@ -46,6 +48,49 @@ def submitted(request,usn):
          'usn':usn
         }
     return render(request,'submitted.html',context)
+
+def updateProjectStudent(request,usn,sid):
+    update_obj = SubmitProject.objects.get(id=sid)
+    context = {
+        'usn':usn,
+        'update_project':update_obj
+    }
+    if request.method == 'POST':
+        project_title = request.POST.get('project_title')
+        source_url = request.POST.get('source_url')
+        SubmitProject.objects.filter(id=sid).update(project_title=project_title,source_url=source_url)
+        messages.success(request,f'Submission for {update_obj.for_project_id.activity_name} Successfully Updated')
+        submitted_projects = SubmitProject.objects.filter(submitted_by=usn)
+        context = {
+            'usn':usn,
+            'submitted_projects':submitted_projects
+        }
+        return render(request,'submitted.html',context)
+    return render(request,'updateProjectStudent.html',context)
+
+def deleteProjectStudent(request,usn,sid):
+    delete_obj = SubmitProject.objects.get(id=sid)
+    project_title = delete_obj.project_title
+    delete_obj.delete()
+    submitted_projects = SubmitProject.objects.filter(submitted_by=usn)
+    context = {
+        'usn' : usn,
+        'submitted_projects':submitted_projects
+    }
+    messages.success(request,f'{project_title} Deleted')
+    return render(request, 'submitted.html', context)
+
+def gradedStudent(request,usn):
+    submitted = SubmitProject.objects.filter(submitted_by=usn)
+    graded_projects = []
+    for obj in submitted:
+        if obj.grade is not None:
+            graded_projects.append(obj)
+    context={
+        'usn':usn,
+        'graded_projects':graded_projects,
+    }
+    return render(request,'gradedStudent.html',context)
 
 # ----------------------------------------------
 # Teacher Related Views and logic here on
@@ -125,7 +170,39 @@ def updateProject(request,tid,pid):
     return render(request,'updateProject.html',context)
 
 def submissions(request,tid):
-    return render(request,'submissions.html')
+    get_user = get_submitted_students(tid)
+    classes_assigned_to =get_user[1]
+    submitted_projects = get_user[0]
+    context={
+        'teacher_id':tid,
+        'classes':classes_assigned_to,
+        'submitted_projects':submitted_projects,
+    }
+    if request.method == 'POST':
+        grade = request.POST.get('grade')
+        sid = request.POST.get('sid')
+        SubmitProject.objects.filter(id=sid).update(grade=grade)
+    return render(request,'submissions.html',context)
+
+def graded(request,tid):
+    get_user = get_submitted_students(tid)
+    classes_asigned_to = get_user[1]
+    submitted_projects = get_user[0]
+    graded_projects = []
+    for obj in submitted_projects:
+        if obj.grade is not None:
+            graded_projects.append(obj)
+    context = {
+        'classes':classes_asigned_to,
+        'teacher_id':tid,
+        'submitted_projects': graded_projects
+    }
+    if request.method == 'POST':
+        grade = request.POST.get('grade')
+        sid = request.POST.get('sid')
+        SubmitProject.objects.filter(id=sid).update(grade=grade)
+    return render(request,'graded.html',context)
+
 # ---------------------------------------------------------------------
 # Registration Views and Logic to store a new user to database Here on
 # ---------------------------------------------------------------------

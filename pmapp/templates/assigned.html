@@ -16,11 +16,13 @@
     <a href="{% url 'profileTeacher' teacher_id %}">Profile</a>
     <a href="{% url 'assigned' teacher_id %}">Assigned</a>
     <a href="{% url 'submissions' teacher_id %}">Submissions</a>
+    <a href="{% url 'graded' teacher_id %}">Graded</a>
     <a href="{% url 'login' %}">Logout</a>
 </div>
 <br>
 <br><br>
 <br><br>
+<br>
 <fieldset class="projects-fieldset">
     <legend>Assigned Projects</legend>
     <table class="project-table">

@@ -13,7 +13,7 @@
 <div class="logout-btn-div">
     <a href="{% url 'profileStudent' usn %}">Profile</a>
     <a href="{% url 'submitted' usn %}">Submitted</a>
-    <a href="">Graded</a>
+    <a href="{% url 'gradedStudent' usn %}">Graded</a>
     <a href="{% url 'login' %}">Logout</a>
 </div>
 <br><br><br><br><br>
@@ -42,6 +42,12 @@
                 <td>{{project.project_title}}</td>
                 <td>
                     <a href="{{project.source_url}}" target="_blank">{{project.for_project_id.activity_name}} Submission</a>
+                </td>
+                <td class="project-options-td">
+                    <a href="{% url 'updateProjectStudent' usn project.id %}" class="project-options-links-update">UPDATE</a>
+                </td>
+                <td class="project-options-td">
+                    <a href="{% url 'deleteProjectStudent' usn project.id %}" class="project-options-links-delete">DELETE</a>
                 </td>
             </tr>
             {% endfor %}
