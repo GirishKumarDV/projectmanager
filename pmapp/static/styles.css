@@ -317,3 +317,14 @@ tbody {
 .class-links span:hover {
     box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.7);
 }
+
+
+/* Student View graded styles */
+
+.marks-awarded {
+    background-color: rgba(45, 45, 45, 0.3);
+    border: none;
+    padding: 0.4rem;
+    border-radius: 0.4rem;
+    text-align: center;
+}

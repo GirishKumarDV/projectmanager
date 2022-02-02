@@ -65,9 +65,13 @@ def updateProjectStudent(request,usn,sid):
         SubmitProject.objects.filter(id=sid).update(project_title=project_title,source_url=source_url)
         messages.success(request,f'Submission for {update_obj.for_project_id.activity_name} Successfully Updated')
         submitted_projects = SubmitProject.objects.filter(submitted_by=usn)
+        submitted_but_not_graded_projects = []
+        for obj in submitted_projects:
+            if obj.grade is None:
+                submitted_but_not_graded_projects.append(obj)
         context = {
             'usn':usn,
-            'submitted_projects':submitted_projects
+            'submitted_projects':submitted_but_not_graded_projects
         }
         return render(request,'submitted.html',context)
     return render(request,'updateProjectStudent.html',context)
@@ -77,9 +81,13 @@ def deleteProjectStudent(request,usn,sid):
     project_title = delete_obj.project_title
     delete_obj.delete()
     submitted_projects = SubmitProject.objects.filter(submitted_by=usn)
+    submitted_but_not_graded_projects = []
+    for obj in submitted_projects:
+        if obj.grade is None:
+            submitted_but_not_graded_projects.append(obj)
     context = {
-        'usn' : usn,
-        'submitted_projects':submitted_projects
+        'usn':usn,
+        'submitted_projects':submitted_but_not_graded_projects
     }
     messages.success(request,f'{project_title} Deleted')
     return render(request, 'submitted.html', context)

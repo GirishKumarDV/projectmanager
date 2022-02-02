@@ -55,7 +55,7 @@
                     <td><a href="{{project.source_url}}" target="_blank">{{project.submitted_by}}-{{project.submitted_by.name}}</a></td>
                     <td>{{project.for_project_id.deadline}}</td>
                     <td>{{project.submisstion_date}}</td>
-                    <td><u class="updateProject">{{project.grade}}</u> <input type="number" name="grade" min="0" max="100"></td>
+                    <td><u class="updateProject">{{project.grade}}</u> <input type="number" name="grade" min="0" max="100" required></td>
                     <input type="number" name="sid" value="{{project.id}}" style="display: none;">
                     <td><button type="submit">Update Marks</button></td>
                 </tr>
