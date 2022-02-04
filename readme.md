@@ -5,7 +5,8 @@ Submitted by -
 
 Pre-requistes to run this project on your local machine :
 - MySQL 8.0 or higher should be installed
-- Create a schema called 'models'
+- Create a schema called 'models' by executing the following SQL command in the mysql command line prompt
+  - create schema models;
 - Python version 3 generations
 - Install Django 3.2.9 or higher
 
