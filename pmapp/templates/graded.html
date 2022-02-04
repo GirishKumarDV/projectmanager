@@ -31,7 +31,7 @@
 {% for class in classes %}
 <!--  -->
 <fieldset id="{{class}}" class="projects-fieldset">
-    <legend>Class {{class}} Submissions</legend>
+    <legend>Class {{class}} Submissions (Graded)</legend>
     <table>
         <thead>
             <tr>
@@ -43,10 +43,11 @@
                 <th>Grade</th>
             </tr>
         </thead>
-        {% for project in submitted_projects %}
-        <!--  -->
-        {% if project.for_project_id.for_semsec == class %}
+
         <tbody>
+            {% for project in submitted_projects %}
+            <!--  -->
+            {% if project.for_project_id.for_semsec == class %}
             <form action="" method="post">
                 {% csrf_token %}
                 <tr>
@@ -60,11 +61,24 @@
                     <td><button type="submit">Update Marks</button></td>
                 </tr>
             </form>
+            {% endif %}
+            <!--  -->
+            {% endfor %}
+
         </tbody>
-        {% endif %}
-        <!--  -->
-        {% endfor %}
+
     </table>
+    {% for klas,projects in classwise_activities.items %}
+    <!--  -->
+    {% for project in projects %}
+    <!--  -->
+    {% if klas == class.semsec %}
+    <p class="download-flash-messag"><a href="/reports/{{project.activity_name}}{{project.for_subject.subj_code}}class{{klas}}Report.xls" target="_blank"><button >DOWNLOAD</button></a> {{project.for_subject.subj_name}} {{project.activity_name}} Report for class {{klas}}</p>
+    {% endif %}
+    <!--  -->
+    {% endfor %}
+    <!--  -->
+    {% endfor %}
 </fieldset>
 <br>
 <!--  -->

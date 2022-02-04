@@ -57,7 +57,8 @@
         </thead>
         <tbody>
             <tr>
-                <form action="{% url 'addProject' teacher.tid %}" method="get">
+                <form action="{% url 'addProject' teacher.tid %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
                     <td><input type="text" name="activity_name" placeholder="Activity Name Eg: Activity 1" required></td>
                     <td>
                         <textarea name="activity_description" class="description" id="description-textbox-profile" cols="30" rows="3" placeholder="Add assignment Description(if any)..."></textarea>

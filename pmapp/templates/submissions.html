@@ -47,7 +47,7 @@
         <!--  -->
         {% if project.for_project_id.for_semsec == class %}
         <tbody>
-            <form action="{% url 'submissions' teacher_id %}" method="post">
+            <form action="" method="post">
                 {% csrf_token %}
                 <tr>
                     <td>{{project.for_project_id.activity_name}}</td>

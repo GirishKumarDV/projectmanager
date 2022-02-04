@@ -6,7 +6,7 @@
 <form action="{% url 'register' %}" id="registration-form" name="registrationForm" method="post" autocomplete="off">
     {% csrf_token %}
     <fieldset>
-        <legend>Personal Information</legend>
+        <legend>Teacher's Personal Information</legend>
         <label for="tid">Teacher id</label>
         <input type="text" id="tid" name="tid" placeholder="Enter Tid" required>
 

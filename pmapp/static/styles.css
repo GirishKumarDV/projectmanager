@@ -268,6 +268,7 @@ tbody {
     text-align: center;
     background-color: rgba(45, 45, 45, 0.1);
     border: none;
+    resize: none;
     border-radius: 0.7rem;
 }
 
@@ -327,4 +328,30 @@ tbody {
     padding: 0.4rem;
     border-radius: 0.4rem;
     text-align: center;
+}
+
+
+/* graded page- teacher view */
+
+.download-flash-message {
+    animation: textAnimation 1s infinite;
+    font-size: large;
+}
+
+@keyframes textAnimation {
+    0% {
+        color: rgba(250, 20, 35, 0.8);
+    }
+    30% {
+        color: blueviolet;
+    }
+    50% {
+        color: yellow;
+    }
+    75% {
+        color: red;
+    }
+    100% {
+        color: rgba(250, 20, 35, 0.8);
+    }
 }

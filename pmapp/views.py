@@ -1,12 +1,9 @@
 from asyncio.windows_events import NULL
-from multiprocessing import context
-from turtle import update
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import *
 from .methods import *
-
+from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
 # ----------------------------------------------
@@ -25,8 +22,7 @@ def profileStudent(request, usn):
     display_projects = set(project_objs)-set(submitted_projects)
     context = {
         'student': student_obj,
-        'projects': display_projects,
-        
+        'projects': display_projects,        
     }
     return render(request, 'profileStudent.html', context)
 
@@ -120,17 +116,23 @@ def profileTeacher(request, tid):
     return render(request, 'profileTeacher.html', context)
 
 def addProject(request,tid):
-    if request.method == 'GET':
-        activity_name = request.GET.get('activity_name')
-        for_subject = request.GET.get('for_subject')
-        deadline = request.GET.get('deadline') 
-        if request.GET.get('activity_description'):
-            activity_description = request.GET.get('activity_description')
+    # reference to existing Teacher from database who assigns the project/assignment
+    teacher_obj = Teacher.objects.get(tid=tid)
+    if request.method == 'POST':
+        activity_name = request.POST.get('activity_name')
+        for_subject = request.POST.get('for_subject')
+        assign_to = request.POST.get('assign_to')
+        assigned_activities = Project.objects.filter(assigned_by=tid)
+        # Check if assigned activity already exists for that class and that subject
+        for activity in assigned_activities:
+            if activity.activity_name == activity_name and activity.for_subject.subj_code == for_subject and activity.for_semsec.semsec == assign_to:
+                messages.error(request,f'{activity_name} already exists for {for_subject} for {assign_to}, check in assigned page to update/delete')
+                return redirect(teacher_obj)
+        deadline = request.POST.get('deadline') 
+        if request.POST.get('activity_description'):
+            activity_description = request.POST.get('activity_description')
         else:
             activity_description = 'No description'
-        assign_to = request.GET.get('assign_to')
-        # reference to existing Teacher from database who assigns the project/assignment
-        teacher_obj = Teacher.objects.get(tid=tid)
         # reference to existing subject object from database to which assignment has to be assigned
         subj_obj = Subject.objects.get(subj_code=for_subject)
         # referece to existing class object from database to which assignment has to be assigned
@@ -186,6 +188,21 @@ def submissions(request,tid):
     classes_assigned_to =get_user[1]
     submitted_projects = get_user[0]
     non_graded_submissions = []
+    if request.method == 'POST':
+        grade = request.POST.get('grade')
+        sid = request.POST.get('sid')
+        SubmitProject.objects.filter(id=sid).update(grade=grade)
+        non_graded_submissions = []
+        for obj in submitted_projects:
+            if obj.grade is None:
+                non_graded_submissions.append(obj)
+        context = {
+            'teacher_id':tid,
+            'classes':classes_assigned_to,
+            'submitted_projects':non_graded_submissions,
+        }      
+        messages.success(request,"Graded")   
+        return render(request,'submissions.html',context) 
     for obj in submitted_projects:
         if obj.grade is None:
             non_graded_submissions.append(obj)
@@ -193,13 +210,7 @@ def submissions(request,tid):
             'teacher_id':tid,
             'classes':classes_assigned_to,
             'submitted_projects':non_graded_submissions,
-        }
-    if request.method == 'POST':
-        grade = request.POST.get('grade')
-        sid = request.POST.get('sid')
-        SubmitProject.objects.filter(id=sid).update(grade=grade)
-        messages.success(request,"Graded")   
-        return render(request,'submissions.html',context)    
+        }   
     return render(request,'submissions.html',context)
 
 def graded(request,tid):
@@ -207,23 +218,39 @@ def graded(request,tid):
     classes_asigned_to = get_user[1]
     submitted_projects = get_user[0]
     graded_projects = []
-    for obj in submitted_projects:
-        if obj.grade is not None:
-            graded_projects.append(obj)
-    context = {
-        'classes':classes_asigned_to,
-        'teacher_id':tid,
-        'submitted_projects': graded_projects
-    }
     if request.method == 'POST':
         grade = request.POST.get('grade')
         sid = request.POST.get('sid')
+        student = SubmitProject.objects.get(id=sid)
         SubmitProject.objects.filter(id=sid).update(grade=grade)
+        graded_projects = []
+        for obj in submitted_projects:
+            if obj.grade is not None:
+                graded_projects.append(obj)
+        classwise_activities = create_report(tid)
+        context = {
+            'classes':classes_asigned_to,
+            'teacher_id':tid,
+            'submitted_projects': graded_projects,
+            'classwise_activities': classwise_activities 
+        }
+        messages.success(request,f"{student.submitted_by.name}'s marks updatd to {grade} for {student.for_project_id.activity_name}. Clink on graded to see changes")
+        return render(request,'graded.html',context)
+    for obj in submitted_projects:
+        if obj.grade is not None:
+            graded_projects.append(obj)
+    classwise_activities = create_report(tid)
+    context = {
+        'classes':classes_asigned_to,
+        'teacher_id':tid,
+        'classwise_activities': classwise_activities,
+        'submitted_projects': graded_projects
+    }
     return render(request,'graded.html',context)
 
-# ---------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # Registration Views and Logic to store a new user to database Here on
-# ---------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 def register(request):
     if request.method == 'POST':
