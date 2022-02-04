@@ -76,7 +76,7 @@ def create_report(tid):
 # create as many files for each class as the number of assigned projects for that class
     filepointers_to_be_closed = []
     for klas in classwise_activities:
-        print(klas,'----...----......-----.....-')
+       # print(klas,'----...----......-----.....-') to check if data is being passed till this line
         for assigned_projects in classwise_activities[klas]:
             fptr = open(f'reports/{assigned_projects.activity_name}{assigned_projects.for_subject.subj_code}class{klas}Report.xls','w')
             fptr.write(f'\t\t\t{assigned_projects.activity_name} ({assigned_projects.assigned_by.name} - {assigned_projects.for_subject.subj_name})\n\n')
